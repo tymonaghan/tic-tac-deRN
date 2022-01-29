@@ -6,10 +6,7 @@ import {
   ImageBackground,
 } from "react-native";
 import React, { useState, useLayoutEffect } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
-import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
 
 const Gameplay = () => {
   const navigation = useNavigation();
@@ -76,9 +73,13 @@ const Gameplay = () => {
   function handleTurn(row, square) {
     // console.log(row, square);
     if (board[row][square] !== "X" && board[row][square] !== "O") {
+      // make sure there's not already a playerToken on the square
       setBoard([...board], (board[row][square] = xturn ? "X" : "O"));
+      // set the playerToken on the square
       checkForWin();
+      // check for victory conditions
       setXturn(!xturn);
+      // switch turn
     }
     // console.log(xturn);
   }
@@ -86,21 +87,23 @@ const Gameplay = () => {
   function checkForWin() {
     const playerToken = xturn ? "X" : "O";
     const columnsAndDiagonals = [
-      [board[0][0], board[1][0], board[2][0]],
-      [board[0][1], board[1][1], board[2][1]],
-      [board[0][2], board[1][2], board[2][2]],
-      [board[0][0], board[1][1], board[2][2]],
-      [board[0][2], board[1][2], board[2][0]],
+      [board[0][0], board[1][0], board[2][0]], //col1
+      [board[0][1], board[1][1], board[2][1]], //col2
+      [board[0][2], board[1][2], board[2][2]], //col3
+      [board[0][0], board[1][1], board[2][2]], //diag1
+      [board[0][2], board[1][1], board[2][0]], //diag2
     ];
 
-    board.map((row, r) => {
+    board.map((row) => {
       if (row.every((element) => element === playerToken)) {
+        // check rows
         declareVictor(playerToken);
       }
     });
 
-    columnsAndDiagonals.map((row, r) => {
+    columnsAndDiagonals.map((row) => {
       if (row.every((element) => element === playerToken)) {
+        // check columns and diagonals
         declareVictor(playerToken);
       }
     });
