@@ -1,28 +1,29 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 
-const TitleScreen = () => {
+const Gameplay = () => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <Text style={styles.textelement}>Welcome to Tic-Tac-deRN</Text>
-      <Text style={styles.textelement}>
-        The Tic Tac Toe React Native thingy
-      </Text>
+      <Image
+        style={styles.image}
+        source={require("../assets/gridLines.png")}
+      ></Image>
+
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.replace("Gameplay")}
+        onPress={() => navigation.replace("TitleScreen")}
       >
-        <Text style={styles.buttonText}>PLAY</Text>
+        <Text style={styles.buttonText}>QUIT</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-export default TitleScreen;
+export default Gameplay;
 
 const styles = StyleSheet.create({
   container: {
