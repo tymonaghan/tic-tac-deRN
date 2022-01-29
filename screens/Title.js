@@ -9,9 +9,7 @@ const TitleScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.textelement}>Welcome to Tic-Tac-deRN</Text>
-      <Text style={styles.textelement}>
-        The Tic Tac Toe React Native thingy
-      </Text>
+      <Text style={styles.textelement}>The RN is for "React Native"</Text>
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.replace("Gameplay")}

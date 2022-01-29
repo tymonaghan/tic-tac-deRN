@@ -35,7 +35,9 @@ const Gameplay = () => {
         resizeMode="cover"
         style={styles.image}
       >
-        <Text style={styles.textelement}>It is {xturn ? "X" : "O"}'s turn</Text>
+        <Text style={styles.textelement}>
+          {victor ? `${victor} wins!` : `It is ${xturn ? "X" : "O"}'s turn`}
+        </Text>
         {board.map((row, r) => {
           return (
             <View style={styles.row} key={r}>
@@ -56,12 +58,16 @@ const Gameplay = () => {
           );
         })}
       </ImageBackground>
+
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.replace("TitleScreen")}
         >
           <Text style={styles.buttonText}>QUIT</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={reset}>
+          <Text style={styles.buttonText}>Reset Game</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -79,28 +85,55 @@ const Gameplay = () => {
 
   function checkForWin() {
     const playerToken = xturn ? "X" : "O";
+    const columnsAndDiagonals = [
+      [board[0][0], board[1][0], board[2][0]],
+      [board[0][1], board[1][1], board[2][1]],
+      [board[0][2], board[1][2], board[2][2]],
+      [board[0][0], board[1][1], board[2][2]],
+      [board[0][2], board[1][2], board[2][0]],
+    ];
+
     board.map((row, r) => {
       if (row.every((element) => element === playerToken)) {
         declareVictor(playerToken);
       }
     });
+
+    columnsAndDiagonals.map((row, r) => {
+      if (row.every((element) => element === playerToken)) {
+        declareVictor(playerToken);
+      }
+    });
+  }
+
+  function reset() {
+    setBoard([
+      ["0,0", "0,1", "0,2"],
+      ["1,0", "1,1", "1,2"],
+      ["2,0", "2,1", "2,2"],
+    ]);
+    setXturn(true);
   }
 };
 
 export default Gameplay;
 
 const styles = StyleSheet.create({
+  header: {
+    justifyContent: "flex-start",
+  },
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
   button: {
-    backgroundColor: "#0782F9",
+    backgroundColor: "#cc3333",
     width: "60%",
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
+    margin: 12,
   },
   textelement: {
     color: "black",
