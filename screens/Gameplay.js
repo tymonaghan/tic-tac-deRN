@@ -5,10 +5,11 @@ import {
   View,
   ImageBackground,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
+import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
 
 const Gameplay = () => {
   const navigation = useNavigation();
@@ -19,6 +20,13 @@ const Gameplay = () => {
   ]);
 
   const [xturn, setXturn] = useState(true);
+  const [victor, declareVictor] = useState(null);
+
+  useLayoutEffect(() => {
+    victor
+      ? console.log(`game over: ${victor} wins`)
+      : console.log("game start");
+  }, [victor]);
 
   return (
     <View style={styles.container}>
@@ -27,6 +35,7 @@ const Gameplay = () => {
         resizeMode="cover"
         style={styles.image}
       >
+        <Text style={styles.textelement}>It is {xturn ? "X" : "O"}'s turn</Text>
         {board.map((row, r) => {
           return (
             <View style={styles.row} key={r}>
@@ -38,7 +47,7 @@ const Gameplay = () => {
                       key={s}
                       onPress={() => handleTurn(r, s)}
                     >
-                      <Text style={styles.buttonText}>{board[r][s]}</Text>
+                      <Text style={styles.squareText}>{board[r][s]}</Text>
                     </TouchableOpacity>
                   ); // end inner return
                 }) // end innder map args
@@ -59,11 +68,22 @@ const Gameplay = () => {
   );
 
   function handleTurn(row, square) {
-    console.log(row, square);
-    setBoard([...board], (board[row][square] = xturn ? "X" : "O"));
-
-    setXturn(!xturn);
+    // console.log(row, square);
+    if (board[row][square] !== "X" && board[row][square] !== "O") {
+      setBoard([...board], (board[row][square] = xturn ? "X" : "O"));
+      checkForWin();
+      setXturn(!xturn);
+    }
     // console.log(xturn);
+  }
+
+  function checkForWin() {
+    const playerToken = xturn ? "X" : "O";
+    board.map((row, r) => {
+      if (row.every((element) => element === playerToken)) {
+        declareVictor(playerToken);
+      }
+    });
   }
 };
 
@@ -86,6 +106,7 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: 16,
     fontWeight: "bold",
+    textAlign: "center",
   },
   buttonText: {
     color: "white",
@@ -103,5 +124,10 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     justifyContent: "center",
+  },
+  squareText: {
+    color: "black",
+    textAlign: "center",
+    fontWeight: "bold",
   },
 });
