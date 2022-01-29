@@ -1,24 +1,53 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
-import React from "react";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ImageBackground,
+} from "react-native";
+import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 
 const Gameplay = () => {
   const navigation = useNavigation();
+  const [board, setBoard] = useState([
+    ["", "", ""],
+    ["", "", ""],
+    ["", "", ""],
+  ]);
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.image}
+      <ImageBackground
         source={require("../assets/gridLines.png")}
-      ></Image>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.replace("TitleScreen")}
+        resizeMode="cover"
+        style={styles.image}
       >
-        <Text style={styles.buttonText}>QUIT</Text>
-      </TouchableOpacity>
+        {board.map((row, r) => {
+          return (
+            <View style={styles.row} key={r}>
+              {
+                row.map((square, s) => {
+                  return (
+                    <TouchableOpacity style={styles.square} key={s}>
+                      <Text style={styles.buttonText}>YO</Text>
+                    </TouchableOpacity>
+                  ); // end inner return
+                }) // end innder map args
+              }
+            </View> //close "row"
+          );
+        })}
+      </ImageBackground>
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.replace("TitleScreen")}
+        >
+          <Text style={styles.buttonText}>QUIT</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -45,5 +74,17 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "white",
+  },
+  square: {
+    backgroundColor: "gray",
+    margin: 20,
+    padding: 20,
+  },
+  row: {
+    flexDirection: "row",
+  },
+  image: {
+    flex: 1,
+    justifyContent: "center",
   },
 });
